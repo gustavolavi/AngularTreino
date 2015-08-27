@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt" ng-app="myApp">
+<head>
+  <title>TheTops</title>
+
+</head>
+
+<body>
+  <div ng-controller="voteCtrl">
+
+    Bem vindo ao {{test}}
+
+    <h3>{{pontos | currency}}</h3>
+
+    <p>
+      <button ng-click="click()">pontos</button>
+      <br>
+        pontos por click {{pontuacaoPorClick}}
+    </p>
+    <p>
+      <button ng-click="addFabrica()">
+        fabrica
+      </button>
+      <br>
+       pontos por fabrica {{pontuacaoFabrica}}/s
+      <br>
+      preco: {{precoFabrica | currency}}
+      <br>
+      quantidade : {{fabrica}}
+      <br>
+      ganho total: {{(pontuacaoFabrica * fabrica)| currency}}
+    </p>
+  </div>
+
+  <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="../../bower_components/angular/angular.min.js"></script>
+  <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script>
+    angular.module('myApp',[]);
+
+    function voteCtrl($scope,$interval)
+    {
+      var vm = $scope;
+      var intervalo = $interval;
+
+      vm.pontos = 0;
+      vm.test = "TheTops";
+      vm.fabrica = 0;
+      vm.pontuacaoFabrica = 0.2;
+      vm.pontuacaoPorClick = 1;
+
+      vm.precoFabrica= 10;
+      tempoPorSegundo();
+      vm.click = function ()
+      {
+          vm.pontos = vm.pontos + vm.pontuacaoPorClick;
+      }
+
+      vm.addFabrica = function ()
+      {
+        if(vm.pontos >= vm.precoFabrica)
+        {
+          vm.fabrica = vm.fabrica + 1;
+          vm.pontos = vm.pontos - vm.precoFabrica;
+          vm.precoFabrica += ((vm.precoFabrica+75)/100);
+         }
+      }
+
+      function tempoPorSegundo()
+      {
+        $interval(function(){
+          vm.pontos = vm.pontos + (vm.pontuacaoFabrica * vm.fabrica);
+        },1000);
+      }
+
+    }
+    voteCtrl.$inject = ['$scope','$interval'];
+
+    angular.module('myApp').controller('voteCtrl',voteCtrl);
+  </script>
+</body>
+</html>
